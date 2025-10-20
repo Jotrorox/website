@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johannes M&uuml;ller</title>
+    <meta name="description" content="Johannes M&uuml;ller (@jotrorox) - Software Engineer" />
+    <meta property="og:title" content="Johannes M&uuml;ller" />
+    <meta property="og:description" content="Software Engineer @jotrorox" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jotrorox.com" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Johannes M&uuml;ller" />
+    <meta name="twitter:description" content="Software Engineer @jotrorox" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        #mouse-follower {
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body class="font-serif bg-[#282828] text-[#ebdbb2] antialiased">
+    <header class="min-h-screen flex items-center justify-center">
+      <div class="text-center px-4 max-w-md w-full fade-in-up">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Johannes M&uuml;ller</h1>
+        <p class="text-xl md:text-2xl mb-8 opacity-80">@jotrorox</p>
+        <div class="flex flex-wrap justify-center gap-6">
+          <a
+            href="https://github.com/jotrorox"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="GitHub profile"
+          >GitHub</a>
+          <a
+            href="https://jotrorox.com"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="Personal website"
+          >jotrorox.com</a>
+          <a
+            href="mailto:mail@jotrorox.com"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="Email"
+          >mail@jotrorox.com</a>
+          <a
+            href="https://discord.gg/RVr4cceFUt"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="Discord Server"
+          >Discord</a>
+          <a
+            href="https://twitter.com/jotrorox"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="Twitter"
+          >Twitter</a>
+          <a
+            href="https://www.twitch.tv/jotrorox"
+            class="text-[#d5c4a1] hover:text-[#fe8019] transition-colors duration-200 underline decoration-1 underline-offset-4 text-base md:text-lg"
+            aria-label="Twitch"
+          >Twitch</a>
+        </div>
+      </div>
+    </header>
+
+    <div
+      id="mouse-follower"
+      class="fixed pointer-events-none z-50 w-1 h-1 bg-[#fe8019]/80 rounded-full transition-all duration-200 ease-out blur-sm"
+      style="left: 0px; top: 0px;"
+    ></div>
+
+    <script>
+      let mouseX = 0;
+      let mouseY = 0;
+
+      const handleMouseMove = (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        const follower = document.getElementById('mouse-follower');
+        if (follower) {
+          follower.style.left = mouseX + 'px';
+          follower.style.top = mouseY + 'px';
+        }
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+    </script>
+</body>
+</html>
