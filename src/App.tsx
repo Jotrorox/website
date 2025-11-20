@@ -10,13 +10,43 @@ import {
   Server,
   Database,
   ChevronDown,
-  Gamepad2,
   MessageCircle,
 } from "lucide-react";
 
+// --- Interfaces ---
+
+interface NavLinkProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+interface SectionTitleProps {
+  children: React.ReactNode;
+  icon: React.ElementType;
+}
+
+interface SkillBadgeProps {
+  name: string;
+}
+
+interface ProjectCardProps {
+  title: string;
+  desc: string;
+  lang: string;
+  langColor: string;
+  link: string;
+  tags: string[];
+}
+
+interface SocialLinkProps {
+  href: string;
+  icon: React.ElementType;
+  label: string;
+}
+
 // --- Components ---
 
-const NavLink = ({ href, children }) => (
+const NavLink: React.FC<NavLinkProps> = ({ href, children }) => (
   <a
     href={href}
     className="text-gray-400 hover:text-emerald-400 transition-colors duration-300 text-sm font-mono uppercase tracking-wider"
@@ -25,7 +55,10 @@ const NavLink = ({ href, children }) => (
   </a>
 );
 
-const SectionTitle = ({ children, icon: Icon }) => (
+const SectionTitle: React.FC<SectionTitleProps> = ({
+  children,
+  icon: Icon,
+}) => (
   <div className="flex items-center gap-3 mb-8">
     <Icon className="w-6 h-6 text-emerald-500" />
     <h2 className="text-2xl md:text-3xl font-bold text-gray-100 font-mono">
@@ -36,13 +69,20 @@ const SectionTitle = ({ children, icon: Icon }) => (
   </div>
 );
 
-const SkillBadge = ({ name }) => (
+const SkillBadge: React.FC<SkillBadgeProps> = ({ name }) => (
   <span className="px-3 py-1 bg-gray-800/50 border border-gray-700 rounded text-xs font-mono text-emerald-300 hover:border-emerald-500/50 transition-colors cursor-default">
     {name}
   </span>
 );
 
-const ProjectCard = ({ title, desc, lang, langColor, link, tags }) => (
+const ProjectCard: React.FC<ProjectCardProps> = ({
+  title,
+  desc,
+  lang,
+  langColor,
+  link,
+  tags,
+}) => (
   <div className="group relative bg-gray-900/40 border border-gray-800 hover:border-emerald-500/30 rounded-lg p-6 transition-all duration-300 hover:-translate-y-1 overflow-hidden">
     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -93,7 +133,7 @@ const ProjectCard = ({ title, desc, lang, langColor, link, tags }) => (
   </div>
 );
 
-const SocialLink = ({ href, icon: Icon, label }) => (
+const SocialLink: React.FC<SocialLinkProps> = ({ href, icon: Icon, label }) => (
   <a
     href={href}
     target="_blank"
@@ -108,8 +148,8 @@ const SocialLink = ({ href, icon: Icon, label }) => (
 // --- Main App ---
 
 export default function App() {
-  const [scrolled, setScrolled] = useState(false);
-  const [terminalText, setTerminalText] = useState("");
+  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [terminalText, setTerminalText] = useState<string>("");
   const fullText = "systems_engineer --target=world";
 
   // Handle scroll for navbar
@@ -422,9 +462,6 @@ export default function App() {
           <div>
             &copy; {new Date().getFullYear()} Johannes Müller. All rights
             reserved.
-          </div>
-          <div className="mt-2 md:mt-0 font-mono">
-            Built with React & Tailwind
           </div>
         </div>
       </footer>
