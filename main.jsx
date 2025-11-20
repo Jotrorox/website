@@ -10,6 +10,8 @@ import {
   Server,
   Database,
   ChevronDown,
+  Gamepad2,
+  MessageCircle,
 } from "lucide-react";
 
 // --- Components ---
@@ -48,14 +50,27 @@ const ProjectCard = ({ title, desc, lang, langColor, link, tags }) => (
       <h3 className="text-xl font-bold text-gray-100 group-hover:text-emerald-400 transition-colors">
         {title}
       </h3>
-      <a
-        href={link}
-        target="_blank"
-        rel="noreferrer"
-        className="text-gray-500 hover:text-white transition-colors"
-      >
-        <Github className="w-5 h-5" />
-      </a>
+      <div className="flex gap-3">
+        {link.includes("github") ? (
+          <a
+            href={link}
+            target="_blank"
+            rel="noreferrer"
+            className="text-gray-500 hover:text-white transition-colors"
+          >
+            <Github className="w-5 h-5" />
+          </a>
+        ) : (
+          <a
+            href={link}
+            target="_blank"
+            rel="noreferrer"
+            className="text-gray-500 hover:text-white transition-colors"
+          >
+            <ExternalLink className="w-5 h-5" />
+          </a>
+        )}
+      </div>
     </div>
 
     <p className="text-gray-400 mb-6 text-sm leading-relaxed">{desc}</p>
@@ -168,9 +183,9 @@ export default function App() {
           </div>
 
           <p className="max-w-xl text-gray-400 text-lg md:text-xl leading-relaxed">
-            Student and hobby developer from Germany. Passionate about low-level
-            programming, Linux systems, and building efficient tools in Rust,
-            Odin, and C.
+            16-year-old student and hobby developer from Germany. Passionate
+            about low-level programming, Arch Linux, and building efficient
+            tools in Rust, Odin, and C.
           </p>
 
           <div className="flex gap-4 pt-4">
@@ -207,17 +222,15 @@ export default function App() {
                 Java before diving deep into the world of systems programming.
                 Currently based in Germany, I spend my time exploring the
                 intricacies of{" "}
-                <span className="text-gray-200 font-medium">
-                  Linux (Void/Nix)
-                </span>{" "}
+                <span className="text-gray-200 font-medium">Arch Linux</span>{" "}
                 and kernel hacking.
               </p>
               <p>
                 I embrace the "do it yourself" mentality—whether it's writing my
                 own assembler, configuring a custom Neovim environment, or
-                building HTTP servers from scratch. I believe in understanding
-                how things work under the hood to write better, more efficient
-                code.
+                co-developing platforms like RelaxoGames. I believe in
+                understanding how things work under the hood to write better,
+                more efficient code.
               </p>
             </div>
             <div className="bg-gray-900 border border-gray-800 p-6 rounded-lg font-mono text-sm text-gray-300 shadow-2xl">
@@ -236,19 +249,21 @@ export default function App() {
                   <span className="text-green-400">"Johannes Müller"</span>,
                 </p>
                 <p className="pl-4">
+                  born: <span className="text-orange-400">2008</span>,
+                </p>
+                <p className="pl-4">
                   location: <span className="text-green-400">"Germany"</span>,
                 </p>
                 <p className="pl-4">
-                  os:{" "}
-                  <span className="text-green-400">"Void Linux / NixOS"</span>,
+                  os: <span className="text-green-400">"Arch Linux"</span>,
                 </p>
                 <p className="pl-4">
                   editors: [<span className="text-green-400">"Neovim"</span>],
                 </p>
                 <p className="pl-4">
-                  currentFocus: [<span className="text-green-400">"Rust"</span>,{" "}
+                  focus: [<span className="text-green-400">"Rust"</span>,{" "}
                   <span className="text-green-400">"Odin"</span>,{" "}
-                  <span className="text-green-400">"Kernel Dev"</span>]
+                  <span className="text-green-400">"Kernel"</span>]
                 </p>
                 <p>{"}"};</p>
               </div>
@@ -286,17 +301,11 @@ export default function App() {
                 <Server className="w-4 h-4 text-emerald-500" /> Systems & Tools
               </h3>
               <div className="flex flex-wrap gap-2">
-                {[
-                  "Linux",
-                  "Void Linux",
-                  "Nix/NixOS",
-                  "Git",
-                  "Neovim",
-                  "Bash",
-                  "Docker",
-                ].map((s) => (
-                  <SkillBadge key={s} name={s} />
-                ))}
+                {["Arch Linux", "Nix", "Git", "Neovim", "Bash", "Docker"].map(
+                  (s) => (
+                    <SkillBadge key={s} name={s} />
+                  ),
+                )}
               </div>
             </div>
             <div className="space-y-4">
@@ -318,6 +327,14 @@ export default function App() {
         <section id="projects" className="scroll-mt-24">
           <SectionTitle icon={Code2}>Selected Projects</SectionTitle>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ProjectCard
+              title="RelaxoGames"
+              desc="One of two lead developers for RelaxoGames.de, a browser-based gaming platform."
+              lang="Web"
+              langColor="text-purple-400"
+              tags={["Co-Developer", "Game Dev", "Web"]}
+              link="https://relaxogames.de"
+            />
             <ProjectCard
               title="Supervocab"
               desc="A spaced repetition add-on for Supernotes built with Rust. Helps users memorize concepts efficiently within their note-taking workflow."
@@ -351,14 +368,6 @@ export default function App() {
               link="https://github.com/Jotrorox/nvim"
             />
             <ProjectCard
-              title="Supernotes-Nix"
-              desc="A wrapper around the Supernotes AppImage to run seamlessly on Nix/NixOS systems."
-              lang="Nix"
-              langColor="text-blue-200"
-              tags={["Packaging", "Linux"]}
-              link="https://github.com/Jotrorox/supernotes-nix"
-            />
-            <ProjectCard
               title="FizzBuzz API"
               desc="Showcasing FizzBuzz in multiple languages and a dead simple API endpoint for 'fizz buzzing'."
               lang="Multi"
@@ -385,7 +394,12 @@ export default function App() {
               <SocialLink
                 href="mailto:mail@jotrorox.com"
                 icon={Mail}
-                label="mail@jotrorox.com"
+                label="Email"
+              />
+              <SocialLink
+                href="https://discord.jotrorox.com"
+                icon={MessageCircle}
+                label="Discord"
               />
               <SocialLink
                 href="https://github.com/Jotrorox"
@@ -396,11 +410,6 @@ export default function App() {
                 href="https://fosstodon.org/@Jotrorox"
                 icon={Globe}
                 label="Mastodon"
-              />
-              <SocialLink
-                href="https://twitter.com/jotrorox"
-                icon={ExternalLink}
-                label="Twitter/X"
               />
             </div>
           </div>
