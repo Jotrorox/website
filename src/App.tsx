@@ -11,6 +11,10 @@ import {
   Database,
   ChevronDown,
   MessageCircle,
+  Key,
+  Fingerprint,
+  Copy,
+  Check,
 } from "lucide-react";
 
 // --- Interfaces ---
@@ -150,7 +154,15 @@ const SocialLink: React.FC<SocialLinkProps> = ({ href, icon: Icon, label }) => (
 export default function App() {
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [terminalText, setTerminalText] = useState<string>("");
-  const fullText = "systems_engineer --target=world";
+  const [copied, setCopied] = useState<boolean>(false);
+  const fingerprint = "55EB A1EA C6A2 2CA2 F8C6  23D1 FC0A B9A2 5F9E 975C";
+
+  const copyFingerprint = async () => {
+    await navigator.clipboard.writeText(fingerprint.replace(/\s/g, ""));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  const fullText = "hobby_developer --focus=low-level";
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -225,7 +237,7 @@ export default function App() {
           <p className="max-w-xl text-gray-400 text-lg md:text-xl leading-relaxed">
             16-year-old student and hobby developer from Germany. Passionate
             about low-level & embedded programming, (Arch) Linux, and building
-            efficient tools in Odin, and C and other programming languages.
+            tools and libraries in Java, Odin, and C and more.
           </p>
 
           <div className="flex gap-4 pt-4">
@@ -386,12 +398,12 @@ export default function App() {
             <ProjectCard
               title="RelaxoGames"
               desc="One of two lead developers for RelaxoGames.de, a from scratch Minecraft Network."
-              lang="Web"
+              lang="Java"
               langColor="text-purple-400"
               tags={[
                 "Co-Developer",
                 "Game Dev",
-                "Java",
+                "Kotlin",
                 "PostgreSQL",
                 "Minecraft",
               ]}
@@ -473,6 +485,42 @@ export default function App() {
                 icon={Globe}
                 label="Mastodon"
               />
+            </div>
+
+            {/* PGP Key Section */}
+            <div className="mt-12 pt-8 border-t border-gray-800/50">
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex items-center gap-2 text-gray-300 font-mono text-sm">
+                  <Key className="w-4 h-4 text-emerald-500" />
+                  <span>PGP Public Key</span>
+                </div>
+
+                <div className="flex items-center gap-3 bg-gray-950/50 px-4 py-2 rounded-lg border border-gray-800 hover:border-emerald-500/30 transition-colors group">
+                  <Fingerprint className="w-4 h-4 text-gray-500 group-hover:text-emerald-500 transition-colors" />
+                  <span className="font-mono text-xs md:text-sm text-emerald-400/90 break-all">
+                    {fingerprint}
+                  </span>
+                  <button
+                    onClick={copyFingerprint}
+                    className="ml-2 text-gray-500 hover:text-white transition-colors"
+                    title="Copy fingerprint"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-emerald-500" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                <a
+                  href={`${import.meta.env.BASE_URL}public.asc`}
+                  download
+                  className="text-xs text-gray-500 hover:text-emerald-400 transition-colors flex items-center gap-1"
+                >
+                  Download Key <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
           </div>
         </section>
