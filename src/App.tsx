@@ -224,8 +224,8 @@ export default function App() {
 
           <p className="max-w-xl text-gray-400 text-lg md:text-xl leading-relaxed">
             16-year-old student and hobby developer from Germany. Passionate
-            about low-level programming, Arch Linux, and building efficient
-            tools in Rust, Odin, and C.
+            about low-level & embedded programming, (Arch) Linux, and building
+            efficient tools in Odin, and C and other programming languages.
           </p>
 
           <div className="flex gap-4 pt-4">
@@ -259,15 +259,15 @@ export default function App() {
             <div className="space-y-6 text-gray-400 leading-relaxed">
               <p>
                 I've been programming for over 5 years, starting my journey with
-                Java before diving deep into the world of systems programming.
-                Currently based in Germany, I spend my time exploring the
-                intricacies of{" "}
+                Java before diving deep into the world of backend- and low-level
+                programming. Currently based in Germany, I spend my time
+                exploring the intricacies of{" "}
                 <span className="text-gray-200 font-medium">Arch Linux</span>{" "}
                 and kernel hacking.
               </p>
               <p>
                 I embrace the "do it yourself" mentality—whether it's writing my
-                own assembler, configuring a custom Neovim environment, or
+                own assembler, building http servers from scratch, or
                 co-developing platforms like RelaxoGames. I believe in
                 understanding how things work under the hood to write better,
                 more efficient code.
@@ -295,15 +295,18 @@ export default function App() {
                   location: <span className="text-green-400">"Germany"</span>,
                 </p>
                 <p className="pl-4">
-                  os: <span className="text-green-400">"Arch Linux"</span>,
+                  os: <span className="text-green-400">"(Arch) Linux"</span>,
                 </p>
                 <p className="pl-4">
-                  editors: [<span className="text-green-400">"Neovim"</span>],
+                  editors: [
+                  <span className="text-green-400">"Neovim & Zed"</span>],
                 </p>
                 <p className="pl-4">
-                  focus: [<span className="text-green-400">"Rust"</span>,{" "}
+                  focus: [<span className="text-green-400">"Java"</span>,{" "}
                   <span className="text-green-400">"Odin"</span>,{" "}
-                  <span className="text-green-400">"Kernel"</span>]
+                  <span className="text-green-400">"C"</span>,{" "}
+                  <span className="text-green-400">"Low-Level"</span>,{" "}
+                  <span className="text-green-400">"Backend"</span>]
                 </p>
                 <p>{"}"};</p>
               </div>
@@ -324,13 +327,13 @@ export default function App() {
                   "Rust",
                   "Odin",
                   "C",
-                  "C++",
                   "Lua",
-                  "Haskell",
+                  "C3",
                   "Gleam",
                   "Assembly",
                   "Java",
-                  "JavaScript",
+                  "TypeScript",
+                  "Kotlin",
                 ].map((s) => (
                   <SkillBadge key={s} name={s} />
                 ))}
@@ -341,11 +344,20 @@ export default function App() {
                 <Server className="w-4 h-4 text-emerald-500" /> Systems & Tools
               </h3>
               <div className="flex flex-wrap gap-2">
-                {["Arch Linux", "Nix", "Git", "Neovim", "Bash", "Docker"].map(
-                  (s) => (
-                    <SkillBadge key={s} name={s} />
-                  ),
-                )}
+                {[
+                  "(Arch) Linux",
+                  "Nix",
+                  "Git",
+                  "Neovim",
+                  "Bash",
+                  "Docker",
+                  "Quarkus",
+                  "Gradle",
+                  "Maven",
+                  "PostgreSQL",
+                ].map((s) => (
+                  <SkillBadge key={s} name={s} />
+                ))}
               </div>
             </div>
             <div className="space-y-4">
@@ -353,11 +365,15 @@ export default function App() {
                 <Database className="w-4 h-4 text-emerald-500" /> Learning
               </h3>
               <div className="flex flex-wrap gap-2">
-                {["Kernel Dev", "Compilers", "Networking", "Embedded"].map(
-                  (s) => (
-                    <SkillBadge key={s} name={s} />
-                  ),
-                )}
+                {[
+                  "Embedded",
+                  "Compilers",
+                  "Networking",
+                  "Backends",
+                  "Databases",
+                ].map((s) => (
+                  <SkillBadge key={s} name={s} />
+                ))}
               </div>
             </div>
           </div>
@@ -369,10 +385,16 @@ export default function App() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <ProjectCard
               title="RelaxoGames"
-              desc="One of two lead developers for RelaxoGames.de, a browser-based gaming platform."
+              desc="One of two lead developers for RelaxoGames.de, a from scratch Minecraft Network."
               lang="Web"
               langColor="text-purple-400"
-              tags={["Co-Developer", "Game Dev", "Web"]}
+              tags={[
+                "Co-Developer",
+                "Game Dev",
+                "Java",
+                "PostgreSQL",
+                "Minecraft",
+              ]}
               link="https://relaxogames.de"
             />
             <ProjectCard
@@ -408,12 +430,12 @@ export default function App() {
               link="https://github.com/Jotrorox/nvim"
             />
             <ProjectCard
-              title="FizzBuzz API"
-              desc="Showcasing FizzBuzz in multiple languages and a dead simple API endpoint for 'fizz buzzing'."
-              lang="Multi"
+              title="SQLOdin"
+              desc="A simple SQLite library written from scratch in Odin. Provides a custom parser and interpreter for SQLite queries."
+              lang="Odin"
               langColor="text-pink-400"
-              tags={["API", "Fun"]}
-              link="https://github.com/Jotrorox/fizzbuzz"
+              tags={["Odin", "Low-level", "Database", "SQLite", "Library"]}
+              link="https://github.com/Jotrorox/sqlodin"
             />
           </div>
         </section>
@@ -426,8 +448,8 @@ export default function App() {
               Let's build something together
             </h3>
             <p className="text-gray-400 max-w-2xl mx-auto mb-8">
-              Whether you want to discuss low-level systems, need help with a
-              Rust project, or just want to say hi.
+              Whether you want to discuss programming, need help with anything,
+              want to collaborate on a project, or just want to say hi.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
