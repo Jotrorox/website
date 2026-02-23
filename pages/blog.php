@@ -1,8 +1,7 @@
 <?php
-require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../blog.php';
 
-$stmt = $db->query("SELECT * FROM posts ORDER BY created_at DESC");
-$posts = $stmt->fetchAll();
+$posts = blog_get_all_posts();
 ?>
 
 <h2>Blog</h2>
@@ -13,10 +12,10 @@ $posts = $stmt->fetchAll();
     <?php else: ?>
         <?php foreach ($posts as $post): ?>
             <div class="blog-card">
-                <h3><a href="?page=post&id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h3>
+                <h3><a href="?page=post&slug=<?php echo urlencode($post['slug']); ?>"><?php echo htmlspecialchars($post['title']); ?></a></h3>
                 <span class="date"><i class="ph ph-calendar-blank"></i> <?php echo date('M j, Y', strtotime($post['created_at'])); ?></span>
                 <p><?php echo htmlspecialchars($post['excerpt']); ?></p>
-                <a href="?page=post&id=<?php echo $post['id']; ?>" class="read-more">Read more &rarr;</a>
+                <a href="?page=post&slug=<?php echo urlencode($post['slug']); ?>" class="read-more">Read more &rarr;</a>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>
