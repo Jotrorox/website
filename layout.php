@@ -29,6 +29,12 @@
                     <a href="?page=projects" class="<?php echo $page == 'projects' ? 'active' : ''; ?>">
                         <i class="ph ph-rocket-launch icon"></i> Projects
                     </a>
+                    <a href="?page=blog" class="<?php echo in_array($page, ['blog', 'post']) ? 'active' : ''; ?>">
+                        <i class="ph ph-article icon"></i> Blog
+                    </a>
+                    <a href="?page=games" class="<?php echo in_array($page, ['games', 'snake']) ? 'active' : ''; ?>">
+                        <i class="ph ph-game-controller icon"></i> Games
+                    </a>
                     <a href="?page=guestbook" class="<?php echo $page == 'guestbook' ? 'active' : ''; ?>">
                         <i class="ph ph-book-open-text icon"></i> Guestbook
                     </a>
@@ -70,8 +76,7 @@
 
         <footer class="site-footer">
             <div class="badges">
-                <span class="badge">PHP Powered</span>
-                <span class="badge">Indie Web</span>
+                <span class="badge">&copy; <?php echo date("Y"); ?> Jotrorox</span>
                 <span class="badge">Made with <i class="ph-fill ph-heart" style="color: #e74c3c;"></i></span>
             </div>
         </footer>
