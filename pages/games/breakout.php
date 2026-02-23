@@ -75,6 +75,9 @@ let running = false;
 let paused = false;
 let gameOver = false;
 let animationId = null;
+let ballTrail = [];
+let hitEffects = [];
+let paddleFlashFrames = 0;
 
 function createBricks() {
     bricks = [];
@@ -113,11 +116,32 @@ function drawBackground() {
 function drawPaddle() {
     ctx.fillStyle = COLORS.paddle;
     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
-    ctx.strokeStyle = COLORS.paddleBorder;
+
+    if (paddleFlashFrames > 0) {
+        ctx.fillStyle = 'rgba(247,208,165,0.35)';
+        ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    }
+
+    ctx.strokeStyle = paddleFlashFrames > 0 ? '#fff4de' : COLORS.paddleBorder;
     ctx.strokeRect(paddle.x + 1, paddle.y + 1, paddle.width - 2, paddle.height - 2);
 }
 
+function drawBallTrail() {
+    for (let i = 0; i < ballTrail.length; i++) {
+        const point = ballTrail[i];
+        const alpha = (i + 1) / ballTrail.length * 0.24;
+
+        ctx.fillStyle = `rgba(255, 217, 176, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, Math.max(1.5, ball.radius - 2), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
 function drawBall() {
+    drawBallTrail();
+
     ctx.fillStyle = COLORS.ball;
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
@@ -126,6 +150,18 @@ function drawBall() {
 
     ctx.strokeStyle = COLORS.ballBorder;
     ctx.stroke();
+}
+
+function drawHitEffects() {
+    for (let i = 0; i < hitEffects.length; i++) {
+        const effect = hitEffects[i];
+        const size = effect.size;
+
+        ctx.fillStyle = `rgba(248, 228, 206, ${effect.alpha})`;
+        ctx.fillRect(effect.x - size / 2, effect.y - size / 2, size, size);
+        ctx.strokeStyle = `rgba(95, 58, 34, ${Math.max(0, effect.alpha - 0.12)})`;
+        ctx.strokeRect(effect.x - size / 2, effect.y - size / 2, size, size);
+    }
 }
 
 function drawBricks() {
@@ -153,6 +189,7 @@ function drawBricks() {
 function draw() {
     drawBackground();
     drawBricks();
+    drawHitEffects();
     drawPaddle();
     drawBall();
 }
@@ -163,6 +200,8 @@ function resetBallAndPaddle() {
     ball.y = canvas.height - 38;
     ball.vx = (Math.random() > 0.5 ? 1 : -1) * 3.3;
     ball.vy = -3.3;
+    ballTrail = [];
+    paddleFlashFrames = 0;
 }
 
 function showOverlay(mode) {
@@ -304,11 +343,58 @@ function handlePaddleCollision() {
     }
 
     const hitPoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
-    ball.vx = hitPoint * 4;
+    ball.vx = hitPoint * 4.3;
     ball.vy = -Math.abs(ball.vy);
+    paddleFlashFrames = 6;
 }
 
-function handleBrickCollisions() {
+function resolveBrickImpact(nextX, nextY, prevX, prevY, brick) {
+    const brickLeft = brick.x;
+    const brickRight = brick.x + bricksConfig.width;
+    const brickTop = brick.y;
+    const brickBottom = brick.y + bricksConfig.height;
+
+    const cameFromLeft = prevX + ball.radius <= brickLeft;
+    const cameFromRight = prevX - ball.radius >= brickRight;
+    const cameFromTop = prevY + ball.radius <= brickTop;
+    const cameFromBottom = prevY - ball.radius >= brickBottom;
+
+    if ((cameFromLeft || cameFromRight) && !(cameFromTop || cameFromBottom)) {
+        ball.vx = -ball.vx;
+        nextX = cameFromLeft ? brickLeft - ball.radius : brickRight + ball.radius;
+        return { nextX, nextY };
+    }
+
+    if (cameFromTop || cameFromBottom) {
+        ball.vy = -ball.vy;
+        nextY = cameFromTop ? brickTop - ball.radius : brickBottom + ball.radius;
+        return { nextX, nextY };
+    }
+
+    const overlapLeft = Math.abs(nextX + ball.radius - brickLeft);
+    const overlapRight = Math.abs(brickRight - (nextX - ball.radius));
+    const overlapTop = Math.abs(nextY + ball.radius - brickTop);
+    const overlapBottom = Math.abs(brickBottom - (nextY - ball.radius));
+    const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+
+    if (minOverlap === overlapLeft) {
+        ball.vx = -Math.abs(ball.vx);
+        nextX = brickLeft - ball.radius;
+    } else if (minOverlap === overlapRight) {
+        ball.vx = Math.abs(ball.vx);
+        nextX = brickRight + ball.radius;
+    } else if (minOverlap === overlapTop) {
+        ball.vy = -Math.abs(ball.vy);
+        nextY = brickTop - ball.radius;
+    } else {
+        ball.vy = Math.abs(ball.vy);
+        nextY = brickBottom + ball.radius;
+    }
+
+    return { nextX, nextY };
+}
+
+function handleBrickCollisions(nextX, nextY, prevX, prevY) {
     for (let row = 0; row < bricks.length; row++) {
         for (let col = 0; col < bricks[row].length; col++) {
             const brick = bricks[row][col];
@@ -316,22 +402,21 @@ function handleBrickCollisions() {
                 continue;
             }
 
-            const withinX = ball.x + ball.radius >= brick.x && ball.x - ball.radius <= brick.x + bricksConfig.width;
-            const withinY = ball.y + ball.radius >= brick.y && ball.y - ball.radius <= brick.y + bricksConfig.height;
+            const withinX = nextX + ball.radius >= brick.x && nextX - ball.radius <= brick.x + bricksConfig.width;
+            const withinY = nextY + ball.radius >= brick.y && nextY - ball.radius <= brick.y + bricksConfig.height;
 
             if (withinX && withinY) {
                 brick.active = false;
+                const impact = resolveBrickImpact(nextX, nextY, prevX, prevY, brick);
+                nextX = impact.nextX;
+                nextY = impact.nextY;
 
-                const centerX = brick.x + bricksConfig.width / 2;
-                const centerY = brick.y + bricksConfig.height / 2;
-                const dx = Math.abs(ball.x - centerX);
-                const dy = Math.abs(ball.y - centerY);
-
-                if (dx > dy) {
-                    ball.vx = -ball.vx;
-                } else {
-                    ball.vy = -ball.vy;
-                }
+                hitEffects.push({
+                    x: brick.x + bricksConfig.width / 2,
+                    y: brick.y + bricksConfig.height / 2,
+                    size: 8,
+                    alpha: 0.45
+                });
 
                 score += 10;
                 scoreElement.innerText = score;
@@ -346,10 +431,12 @@ function handleBrickCollisions() {
                     stopWithState('win');
                 }
 
-                return;
+                return { hit: true, nextX, nextY };
             }
         }
     }
+
+    return { hit: false, nextX, nextY };
 }
 
 function handleBottomCollision() {
@@ -374,13 +461,79 @@ function gameLoop() {
     }
 
     updatePaddle();
-    handleWallCollisions();
-    handlePaddleCollision();
-    handleBrickCollisions();
-    handleBottomCollision();
 
-    ball.x += ball.vx;
-    ball.y += ball.vy;
+    let nextX = ball.x + ball.vx;
+    let nextY = ball.y + ball.vy;
+
+    if (nextX < ball.radius) {
+        nextX = ball.radius;
+        ball.vx = Math.abs(ball.vx);
+    }
+
+    if (nextX > canvas.width - ball.radius) {
+        nextX = canvas.width - ball.radius;
+        ball.vx = -Math.abs(ball.vx);
+    }
+
+    if (nextY < ball.radius) {
+        nextY = ball.radius;
+        ball.vy = Math.abs(ball.vy);
+    }
+
+    const intersectsPaddle =
+        nextY + ball.radius >= paddle.y &&
+        nextY + ball.radius <= paddle.y + paddle.height + Math.abs(ball.vy) &&
+        nextX >= paddle.x &&
+        nextX <= paddle.x + paddle.width &&
+        ball.vy > 0;
+
+    if (intersectsPaddle) {
+        const hitPoint = (nextX - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+        ball.vx = hitPoint * 4.3;
+        ball.vy = -Math.abs(ball.vy);
+        nextY = paddle.y - ball.radius;
+        paddleFlashFrames = 6;
+    }
+
+    const brickCollision = handleBrickCollisions(nextX, nextY, ball.x, ball.y);
+    nextX = brickCollision.nextX;
+    nextY = brickCollision.nextY;
+
+    if (nextY > canvas.height - ball.radius) {
+        lives--;
+        livesElement.innerText = lives;
+
+        if (lives <= 0) {
+            stopWithState('lose');
+            return;
+        }
+
+        resetBallAndPaddle();
+        draw();
+        animationId = requestAnimationFrame(gameLoop);
+        return;
+    }
+
+    ball.x = nextX;
+    ball.y = nextY;
+
+    ballTrail.push({ x: ball.x, y: ball.y });
+    if (ballTrail.length > 6) {
+        ballTrail.shift();
+    }
+
+    for (let i = hitEffects.length - 1; i >= 0; i--) {
+        hitEffects[i].size += 1.1;
+        hitEffects[i].alpha -= 0.05;
+
+        if (hitEffects[i].alpha <= 0) {
+            hitEffects.splice(i, 1);
+        }
+    }
+
+    if (paddleFlashFrames > 0) {
+        paddleFlashFrames--;
+    }
 
     draw();
 

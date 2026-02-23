@@ -13,9 +13,9 @@
 
     .tetris-board-wrap {
         position: relative;
-        width: min(300px, 100%);
-        flex: 1 1 300px;
-        max-width: 300px;
+        width: min(200px, 100%);
+        flex: 0 0 200px;
+        max-width: 200px;
     }
 
     .tetris-canvas {
@@ -62,6 +62,16 @@
         color: var(--text-light);
     }
 
+    .tetris-score-pop {
+        animation: tetris-score-pop 180ms ease-out;
+    }
+
+    @keyframes tetris-score-pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.18); }
+        100% { transform: scale(1); }
+    }
+
     @media (max-width: 560px) {
         .tetris-layout {
             flex-direction: column;
@@ -69,7 +79,7 @@
         }
 
         .tetris-side {
-            width: min(300px, 100%);
+            width: min(200px, 100%);
             box-sizing: border-box;
         }
     }
@@ -78,7 +88,7 @@
 <div class="game-container" style="text-align: center; margin-top: 20px; max-width: 760px; margin-left: auto; margin-right: auto;">
     <div class="tetris-layout">
         <div class="tetris-board-wrap">
-        <canvas id="tetrisCanvas" class="tetris-canvas" width="300" height="400"></canvas>
+        <canvas id="tetrisCanvas" class="tetris-canvas" width="200" height="400"></canvas>
         <div id="tetrisOverlay" style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; background: rgba(15,56,15,0.72); color: #9bbc0f; border-radius: 8px; font-family: 'Pixelify Sans', sans-serif; padding: 20px;">
             <h3 id="overlayTitle" style="margin: 0; font-size: 1.9rem; color: #9bbc0f; letter-spacing: 1px;">Tetris</h3>
             <p id="overlaySubtitle" style="margin: 0; color: #e4f2a1; font-size: 1rem;">Press Play to start.</p>
@@ -117,13 +127,13 @@ const EMPTY = 0;
 
 const COLORS = [
     null,
-    '#0f380f',
-    '#306230',
-    '#8bac0f',
-    '#1f4f1f',
-    '#5f7f1f',
-    '#7f5f1f',
-    '#8b1c1c'
+    '#197278',
+    '#f3722c',
+    '#f9c74f',
+    '#8e7dbe',
+    '#f94144',
+    '#43aa8b',
+    '#577590'
 ];
 
 const SHAPES = [
@@ -151,6 +161,8 @@ let holdRight = false;
 let preferredHoldDirection = 0;
 let holdTimeout = null;
 let holdInterval = null;
+let lineFlashRows = [];
+let lineFlashTimer = 0;
 
 function createEmptyBoard() {
     return Array.from({ length: ROWS }, () => Array(COLS).fill(EMPTY));
@@ -235,9 +247,11 @@ function mergePiece() {
 
 function clearLines() {
     let cleared = 0;
+    const clearedRows = [];
 
     for (let y = ROWS - 1; y >= 0; y--) {
         if (board[y].every(cell => cell !== EMPTY)) {
+            clearedRows.push(y);
             board.splice(y, 1);
             board.unshift(Array(COLS).fill(EMPTY));
             cleared++;
@@ -246,8 +260,13 @@ function clearLines() {
     }
 
     if (cleared > 0) {
+        lineFlashRows = clearedRows;
+        lineFlashTimer = 8;
         score += cleared * 100;
         scoreElement.innerText = score;
+        scoreElement.classList.remove('tetris-score-pop');
+        void scoreElement.offsetWidth;
+        scoreElement.classList.add('tetris-score-pop');
 
         if (dropDelay > 160) {
             dropDelay = Math.max(160, dropDelay - cleared * 10);
@@ -272,9 +291,15 @@ function drawBackground() {
 
 function drawCell(x, y, value) {
     ctx.fillStyle = COLORS[value];
-    ctx.fillRect(x * SIZE, y * SIZE, SIZE, SIZE);
-    ctx.strokeStyle = '#9bbc0f';
-    ctx.strokeRect(x * SIZE + 1, y * SIZE + 1, SIZE - 2, SIZE - 2);
+    const px = x * SIZE;
+    const py = y * SIZE;
+    ctx.fillRect(px, py, SIZE, SIZE);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.fillRect(px + 2, py + 2, SIZE - 4, 4);
+
+    ctx.strokeStyle = 'rgba(15,56,15,0.55)';
+    ctx.strokeRect(px + 1, py + 1, SIZE - 2, SIZE - 2);
 }
 
 function drawBoard() {
@@ -304,6 +329,18 @@ function draw() {
     drawBoard();
     if (currentPiece) {
         drawPiece();
+    }
+
+    if (lineFlashTimer > 0) {
+        ctx.fillStyle = `rgba(244, 255, 188, ${lineFlashTimer / 14})`;
+        for (let i = 0; i < lineFlashRows.length; i++) {
+            const row = lineFlashRows[i];
+            ctx.fillRect(0, row * SIZE, canvas.width, SIZE);
+        }
+        lineFlashTimer--;
+        if (lineFlashTimer === 0) {
+            lineFlashRows = [];
+        }
     }
 }
 
@@ -338,7 +375,9 @@ function drawNextPiece() {
                 const py = offsetY + y * blockSize;
                 nextCtx.fillStyle = COLORS[value];
                 nextCtx.fillRect(px, py, blockSize, blockSize);
-                nextCtx.strokeStyle = '#9bbc0f';
+                nextCtx.fillStyle = 'rgba(255,255,255,0.22)';
+                nextCtx.fillRect(px + 2, py + 2, blockSize - 4, 3);
+                nextCtx.strokeStyle = 'rgba(15,56,15,0.55)';
                 nextCtx.strokeRect(px + 1, py + 1, blockSize - 2, blockSize - 2);
             }
         }
