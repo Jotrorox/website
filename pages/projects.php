@@ -1,5 +1,4 @@
 <h2>Projects</h2>
-<p>I'm always working on something new. Here are some areas I focus on:</p>
 
 <div class="project-list">
     <div class="project-item">

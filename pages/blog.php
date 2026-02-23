@@ -6,7 +6,6 @@ $posts = $stmt->fetchAll();
 ?>
 
 <h2>Blog</h2>
-<p>Thoughts, tutorials, and updates on my projects.</p>
 
 <div class="blog-grid">
     <?php if (empty($posts)): ?>

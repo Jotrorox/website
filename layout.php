@@ -65,12 +65,12 @@
                         <li><a href="https://x.com/jotrorox" target="_blank">Twitter/X</a></li>
                     </ul>
                 </div>
-                <div class="widget decorative-widget">
+                <!-- <div class="widget decorative-widget">
                     <div class="pixel-art-placeholder">
                         <i class="ph ph-game-controller"></i>
                         <i class="ph ph-cpu"></i>
                     </div>
-                </div>
+                </div> -->
             </aside>
         </div>
 
