@@ -35,9 +35,6 @@
                     <a href="?page=games" class="<?php echo in_array($page, ['games', 'snake']) ? 'active' : ''; ?>">
                         <i class="ph ph-game-controller icon"></i> Games
                     </a>
-                    <a href="?page=guestbook" class="<?php echo $page == 'guestbook' ? 'active' : ''; ?>">
-                        <i class="ph ph-book-open-text icon"></i> Guestbook
-                    </a>
                     <a href="?page=contact" class="<?php echo $page == 'contact' ? 'active' : ''; ?>">
                         <i class="ph ph-mailbox icon"></i> Contact
                     </a>

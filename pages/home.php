@@ -2,7 +2,7 @@
 <div class="intro-box">
     <p>Hi, I'm <strong>Johannes Müller</strong>, also known online as <strong>jotrorox</strong>.</p>
     <p>I'm a 17-year-old developer from Germany with over 6 years of experience. I specialize in backends, embedded code, networking, and databases.</p>
-    <p>Feel free to explore my site, check out my projects, or leave a message in the guestbook!</p>
+    <p>Feel free to explore my site and check out my projects!</p>
 </div>
 <div class="highlight-grid">
     <div class="highlight-card">
