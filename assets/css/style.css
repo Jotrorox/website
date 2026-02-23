@@ -461,6 +461,69 @@ a:hover {
     font-size: 1.05rem;
 }
 
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.post-body p {
+    margin-bottom: 1rem;
+}
+
+.post-body ul,
+.post-body ol {
+    margin: 0.75rem 0 1rem 1.5rem;
+    padding-left: 0.5rem;
+}
+
+.post-body li {
+    margin-bottom: 0.35rem;
+}
+
+.post-body a {
+    text-decoration: underline;
+}
+
+.post-body code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.95em;
+    background-color: var(--content-bg);
+    border: 1px solid var(--content-border);
+    border-radius: 4px;
+    padding: 0.15rem 0.35rem;
+}
+
+.post-body pre {
+    margin: 1rem 0;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--content-border);
+}
+
+.post-body pre code {
+    display: block;
+    padding: 1rem;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+}
+
+.post-body blockquote {
+    margin: 1rem 0;
+    padding: 0.1rem 0 0.1rem 1rem;
+    border-left: 4px solid var(--accent-color);
+    background-color: var(--content-bg);
+}
+
+.post-body del {
+    opacity: 0.85;
+}
+
 .back-link {
     display: inline-block;
     margin-bottom: 15px;

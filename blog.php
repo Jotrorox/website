@@ -38,12 +38,18 @@ function blog_markdown_inline(string $text): string
 
     $escaped = preg_replace_callback('/\[([^\]]+)\]\(([^\s)]+)\)/', function ($matches) {
         $label = $matches[1];
-        $url = $matches[2];
+        $url = trim($matches[2]);
+
+        if (!preg_match('/^(?:https?:|mailto:|\/|#|\.\/|\.\.\/)/i', $url)) {
+            return $label;
+        }
+
         $safeUrl = htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         return '<a href="' . $safeUrl . '" target="_blank" rel="noopener noreferrer">' . $label . '</a>';
     }, $escaped);
 
     $escaped = preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $escaped);
+    $escaped = preg_replace('/~~([^~]+)~~/', '<del>$1</del>', $escaped);
     $escaped = preg_replace('/\*([^*]+)\*/', '<em>$1</em>', $escaped);
 
     return $escaped;
@@ -58,10 +64,12 @@ function blog_markdown_to_html(string $markdown): string
 
     $lines = explode("\n", $markdown);
     $html = [];
-    $inList = false;
+    $listType = null;
     $inCodeBlock = false;
+    $codeLanguage = '';
     $codeLines = [];
     $paragraphLines = [];
+    $inBlockquote = false;
 
     $flushParagraph = function () use (&$paragraphLines, &$html) {
         if (empty($paragraphLines)) {
@@ -73,24 +81,37 @@ function blog_markdown_to_html(string $markdown): string
         $paragraphLines = [];
     };
 
-    $closeList = function () use (&$inList, &$html) {
-        if ($inList) {
-            $html[] = '</ul>';
-            $inList = false;
+    $closeList = function () use (&$listType, &$html) {
+        if ($listType !== null) {
+            $html[] = '</' . $listType . '>';
+            $listType = null;
+        }
+    };
+
+    $closeBlockquote = function () use (&$inBlockquote, &$html) {
+        if ($inBlockquote) {
+            $html[] = '</blockquote>';
+            $inBlockquote = false;
         }
     };
 
     foreach ($lines as $line) {
-        if (preg_match('/^```/', $line)) {
+        if (preg_match('/^```\s*([A-Za-z0-9_+\-]*)\s*$/', $line, $fenceMatches)) {
             $flushParagraph();
             $closeList();
+            $closeBlockquote();
 
             if (!$inCodeBlock) {
                 $inCodeBlock = true;
                 $codeLines = [];
+                $codeLanguage = strtolower($fenceMatches[1] ?? '');
             } else {
-                $html[] = '<pre><code>' . htmlspecialchars(implode("\n", $codeLines), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</code></pre>';
+                $classAttribute = $codeLanguage !== ''
+                    ? ' class="language-' . htmlspecialchars($codeLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"'
+                    : '';
+                $html[] = '<pre><code' . $classAttribute . '>' . htmlspecialchars(implode("\n", $codeLines), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</code></pre>';
                 $inCodeBlock = false;
+                $codeLanguage = '';
                 $codeLines = [];
             }
             continue;
@@ -104,12 +125,14 @@ function blog_markdown_to_html(string $markdown): string
         if (trim($line) === '') {
             $flushParagraph();
             $closeList();
+            $closeBlockquote();
             continue;
         }
 
         if (preg_match('/^(#{1,6})\s+(.+)$/', $line, $matches)) {
             $flushParagraph();
             $closeList();
+            $closeBlockquote();
 
             $level = strlen($matches[1]);
             $html[] = '<h' . $level . '>' . blog_markdown_inline(trim($matches[2])) . '</h' . $level . '>';
@@ -118,24 +141,61 @@ function blog_markdown_to_html(string $markdown): string
 
         if (preg_match('/^[-*]\s+(.+)$/', $line, $matches)) {
             $flushParagraph();
-            if (!$inList) {
+            $closeBlockquote();
+            if ($listType !== 'ul') {
+                $closeList();
                 $html[] = '<ul>';
-                $inList = true;
+                $listType = 'ul';
             }
 
             $html[] = '<li>' . blog_markdown_inline(trim($matches[1])) . '</li>';
             continue;
         }
 
+        if (preg_match('/^\d+\.\s+(.+)$/', $line, $matches)) {
+            $flushParagraph();
+            $closeBlockquote();
+            if ($listType !== 'ol') {
+                $closeList();
+                $html[] = '<ol>';
+                $listType = 'ol';
+            }
+
+            $html[] = '<li>' . blog_markdown_inline(trim($matches[1])) . '</li>';
+            continue;
+        }
+
+        if (preg_match('/^>\s?(.*)$/', $line, $matches)) {
+            $flushParagraph();
+            $closeList();
+            if (!$inBlockquote) {
+                $html[] = '<blockquote>';
+                $inBlockquote = true;
+            }
+
+            $quoteLine = trim($matches[1]);
+            if ($quoteLine !== '') {
+                $html[] = '<p>' . blog_markdown_inline($quoteLine) . '</p>';
+            }
+            continue;
+        }
+
+        $closeBlockquote();
+        $closeList();
+
         $paragraphLines[] = trim($line);
     }
 
     if ($inCodeBlock) {
-        $html[] = '<pre><code>' . htmlspecialchars(implode("\n", $codeLines), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</code></pre>';
+        $classAttribute = $codeLanguage !== ''
+            ? ' class="language-' . htmlspecialchars($codeLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"'
+            : '';
+        $html[] = '<pre><code' . $classAttribute . '>' . htmlspecialchars(implode("\n", $codeLines), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</code></pre>';
     }
 
     $flushParagraph();
     $closeList();
+    $closeBlockquote();
 
     return implode("\n", $html);
 }

@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>jotrorox | <?php echo ucfirst($page); ?></title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { hljs.highlightAll(); });</script>
 </head>
 <body>
     <div class="site-wrapper">
@@ -18,6 +21,7 @@
         </header>
 
         <div class="main-container">
+            <?php $game_pages = ['snake', 'tetris', 'breakout']; ?>
             <aside class="sidebar-left">
                 <nav class="main-nav">
                     <a href="?page=home" class="<?php echo $page == 'home' ? 'active' : ''; ?>">
@@ -32,7 +36,7 @@
                     <a href="?page=blog" class="<?php echo in_array($page, ['blog', 'post']) ? 'active' : ''; ?>">
                         <i class="ph ph-article icon"></i> Blog
                     </a>
-                    <a href="?page=games" class="<?php echo in_array($page, ['games', 'snake']) ? 'active' : ''; ?>">
+                    <a href="?page=games" class="<?php echo in_array($page, array_merge(['games'], $game_pages)) ? 'active' : ''; ?>">
                         <i class="ph ph-game-controller icon"></i> Games
                     </a>
                     <a href="?page=contact" class="<?php echo $page == 'contact' ? 'active' : ''; ?>">
@@ -43,7 +47,10 @@
 
             <main class="content-area">
                 <div class="content-inner">
-                    <?php include "pages/{$page}.php"; ?>
+                    <?php
+                    $page_path = in_array($page, $game_pages) ? "pages/games/{$page}.php" : "pages/{$page}.php";
+                    include $page_path;
+                    ?>
                 </div>
             </main>
 
