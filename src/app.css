@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-400.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-600.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-700.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-800.ttf") format("truetype");
+}
+
+:root {
+  --color-slate-950: #05070a;
+  --color-slate-900: #0b1017;
+  --color-slate-800: #141b24;
+  --color-slate-300: #c4ccd6;
+  --color-slate-100: #eef3f8;
+  --color-white: #ffffff;
+
+  --color-surface-page: var(--color-slate-950);
+  --color-surface-panel: var(--color-slate-900);
+  --color-surface-muted: var(--color-slate-800);
+  --color-text-primary: var(--color-white);
+  --color-text-secondary: var(--color-slate-300);
+  --color-border-subtle: color-mix(in srgb, var(--color-white) 14%, transparent);
+  --color-border-strong: color-mix(in srgb, var(--color-white) 32%, transparent);
+  --color-focus-ring: var(--color-slate-100);
+
+  --font-family-base: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-size-display: clamp(3.25rem, 10vw, 9rem);
+  --font-size-h2: clamp(1.75rem, 4vw, 3.75rem);
+  --font-size-lede: clamp(1rem, 1.8vw, 1.55rem);
+  --font-size-body: 0.95rem;
+  --font-size-ui: 0.78rem;
+  --line-height-tight: 0.82;
+  --line-height-body: 1.45;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --radius-box: 0.18rem;
+  --duration-fast: 180ms;
+  --duration-normal: 300ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  font: 16px/1.45 var(--font-family-base);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-page);
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
