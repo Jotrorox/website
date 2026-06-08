@@ -5,8 +5,8 @@
     { label: 'arduino.c3l', url: 'https://github.com/jotrorox/arduino.c3l' },
     { label: 'sqlodin', url: 'https://github.com/jotrorox/sqlodin' },
     { label: 'c3ttp.c3l', url: 'https://github.com/jotrorox/c3ttp.c3l' },
-    { label: 'sickle', url: 'sickle-cal.com' },
-    { label: 'relaxogames', url: 'relaxogames.de' },
+    { label: 'sickle', url: 'https://sickle-cal.com' },
+    { label: 'relaxogames', url: 'https://relaxogames.de' },
   ];
 
   const socialLinks = [
@@ -28,7 +28,7 @@
       <p class="text-sm text-neutral-500">builds things or smth</p>
     </header>
 
-    <nav class="flex flex-col gap-5 w-full">
+    <nav class="flex flex-col gap-5 w-full" aria-label="Projects">
       {#each primaryLinks as link}
         <a
                 href={link.url}
@@ -44,7 +44,7 @@
     <footer class="w-full flex flex-col gap-6">
       <hr class="border-neutral-900 w-full" />
 
-      <div class="flex gap-4 items-center">
+      <div class="flex gap-4 items-center" aria-label="Social links">
         {#each socialLinks as social}
           <a
                   href={social.url}
