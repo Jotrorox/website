@@ -1,11 +1,12 @@
 import { For } from 'solid-js'
 
 const primaryLinks = [
-  { label: 'embedded.c3l', url: 'https://github.com/Jotrorox/embedded.c3l' },
   { label: 'mqui', url: 'https://github.com/jotrorox/mqui' },
   { label: 'arduino.c3l', url: 'https://github.com/jotrorox/arduino.c3l' },
   { label: 'sqlodin', url: 'https://github.com/jotrorox/sqlodin' },
+  { label: 'austri', url: 'https://github.com/jotrorox/austri' },
   { label: 'depender', url: 'https://depender.jotrorox.com' },
+  { label: 'foveara ', url: 'https://foveara.com' },
   { label: 'sickle', url: 'https://sickle-cal.com' },
   { label: 'relaxogames', url: 'https://relaxogames.de' },
 ]
