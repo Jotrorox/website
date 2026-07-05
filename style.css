@@ -1,0 +1,119 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+  color: #a1a1aa;
+  background: #09090b;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+::selection {
+  color: #fff;
+  background: #262626;
+}
+
+main {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.content {
+  display: flex;
+  width: 100%;
+  max-width: 20rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+header p {
+  color: #737373;
+  font-size: 0.875rem;
+}
+
+.projects {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+a {
+  width: fit-content;
+  color: #a3a3a3;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 150ms ease-in-out;
+}
+
+a:hover,
+a:focus-visible {
+  color: #fff;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+footer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+hr {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid #171717;
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.socials a {
+  color: #525252;
+  font-size: 0.75rem;
+}
+
+.socials a:hover,
+.socials a:focus-visible {
+  color: #d4d4d4;
+}
