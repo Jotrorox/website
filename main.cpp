@@ -1,6 +1,7 @@
 #include "httplib.h"
 #include "logger.hpp"
 
+#include <cstdlib>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -16,7 +17,10 @@ int main() {
 
     svr.set_mount_point("/", "./public");
 
-    SLOG_INFO("The server now started on: ", 8080);
+    const char* port_env = std::getenv("PORT");
+    const int port = port_env ? std::stoi(port_env) : 8080;
 
-    svr.listen("0.0.0.0", 8080);
+    SLOG_INFO("The server now started on: ", port);
+
+    svr.listen("0.0.0.0", port);
 }
